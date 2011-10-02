@@ -13,6 +13,7 @@ push notifications to subscribers, as well as diff new and old feeds.
 Therefore, in order to allow more flexibility, in its core Hubble is agnostic to: storage, async execution and feed diffing algorithms.  
 
 But you don't get an empty box!. Hubble includes a default implementation of:
+
 * Storage: redis
 * Async execution: Resque
 * Diffing: a custom simple feed diff (based on last seen entry id)
