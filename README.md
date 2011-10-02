@@ -2,7 +2,7 @@
 
 Hubble is a lightweight, extensible ruby based Pubsubhubbub (PuSH) hub.  
 
-In addition to conforming to the [PuSH spec 0.3](http://pubsubhubbub.googlecode.com/svn/trunk/pubsubhubbub-core-0.2.html), a real life hub
+In addition to conforming to the [PuSH spec 0.3](http://pubsubhubbub.googlecode.com/svn/trunk/pubsubhubbub-core-0.3.html), a real life hub
 should have in its concerns how it is going to store topics, subscribers
 and meta-data about feeds.  
 
