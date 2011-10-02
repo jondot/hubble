@@ -1,0 +1,4 @@
+tab "rake resque:work QUEUE=job_runner"
+tab "rackup -p 3000"
+tab "cd examples; rackup -p 9292"
+
