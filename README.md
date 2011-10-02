@@ -1,9 +1,3 @@
-todo:
-- redis instance should get host/port from config
-- this includes configuring resque
-- testing over redis profile
-
-
 # Hubble
 
 Hubble is a lightweight, extensible ruby based Pubsubhubbub (PuSH) hub.  
