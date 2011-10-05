@@ -19,7 +19,6 @@ module Hubble
         halt 400, "Only 'subscribe', 'publish' are allowed for #{PSHB::MODE}" 
       end
 
-
       if mode == 'subscribe'
         unless topic_url and callback and verify and ['sync', 'async'].include?(verify)
           halt 400, "Missing #{PSHB::CALLBACK}, #{PSHB::TOPIC}, or #{PSHB::VERIFY}"

@@ -12,6 +12,10 @@ module Hubble
       Hubble.profile
     end
 
+    def self.log
+      Hubble.log
+    end
+
     def initialize(h, is_new=true)
       @callback = h[:callback]
       @secret   = h[:secret]
@@ -51,7 +55,7 @@ module Hubble
       # go ahead
       # no invalid yet because we're only doing sync!.
       # which means, if the sub was added it is valid.
-
+      log.info("New subscriber (valid): #{callback}")
       profile.create_subscriber(
         Subscriber.new( { :callback => callback,
                           :secret   => secret,

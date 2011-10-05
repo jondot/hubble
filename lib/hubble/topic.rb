@@ -18,6 +18,10 @@ module Hubble
       Hubble.differ
     end
 
+    def self.log
+      Hubble.log
+    end
+
     def initialize(h)
       @url = h[:url]
       @id  = h[:id]
@@ -28,11 +32,13 @@ module Hubble
     end
 
     def self.create(topic_url)
+      self.class.log.info("New topic: #{url}")
       t = Topic.new({:url => topic_url})
       profile.save_topic(t)
     end
 
     def add_subscriber(sub)
+      self.class.log.info("Subscribing #{sub.callback} to #{self.url}")
       self.class.profile.subscribe(self, sub)
     end
 
@@ -53,6 +59,7 @@ module Hubble
       return nil if diff_content.nil? # cant diff (content not suitable)
       self.class.profile.set_last_content(self.id, last_content)
 
+      self.class.log.info("POSTing #{subs.size} subscribers")
       subs.each{ |s| post(s, res.content_type, diff_content) }
     end
 
@@ -77,6 +84,8 @@ module Hubble
 
     def fetch()
       res = HTTParty.get(url)
+      log.info("Fetched #{url}")
+
       #figure out if this content is valid.
       return nil unless ['application/atom+xml', 'application/rss+xml'].include? res.content_type
       return nil unless res.code >= 200 && res.code < 300
