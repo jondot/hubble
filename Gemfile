@@ -1,7 +1,6 @@
 source :gemcutter
 
 gem 'sinatra'
-#gem 'hiredis'
 
 gem 'watchr'
 gem 'rr'
@@ -13,8 +12,11 @@ gem 'nokogiri'
 
 # redis_profile
 gem 'redis'
+gem 'redis-namespace'
+#gem 'hiredis'
 gem 'resque'
 group :test do
+  gem 'webmock'
   gem 'simplecov'
   gem 'simplecov-html'
 end

@@ -1,12 +1,11 @@
 require 'helper'
-require 'rack/test'
 require 'pp'
 
 require 'hubble/app'
-
-
-
+require 'rack/test'
 include Rack::Test::Methods
+
+
 
 include Hubble
 
@@ -285,6 +284,57 @@ describe Topic do
     t.publish
   end
 
+  it "should fetch the source url if atom or rss, and success" do
+    response = {
+      :body => file_content('feed_new.xml'),
+      :status => 200,
+      :headers => { 'content-type' => 'application/atom+xml'}
+    }
+
+    stub_request(:get, "http://acme.org").to_return(response)
+    t = build_topic_from_url("http://acme.org")
+    t.fetch().wont_equal nil
+
+
+    response[:headers]['content-type'] = 'application/rss+xml'
+    stub_request(:get, "http://acme.org").to_return(response)
+    t = build_topic_from_url("http://acme.org")
+    t.fetch().wont_equal nil
+
+    response[:headers]['content-type'] = 'application/poo+xml'
+    stub_request(:get, "http://acme.org").to_return(response)
+    t = build_topic_from_url("http://acme.org")
+    t.fetch().must_equal nil
+
+    response[:headers]['content-type'] = 'application/rss+xml'
+    response[:status] = 500
+    stub_request(:get, "http://acme.org").to_return(response)
+    t = build_topic_from_url("http://acme.org")
+    t.fetch().must_equal nil
+  end
+
+  it "should POST and NOT sign data when POSTing and subscriber has NO secret" do
+    topic_response = {
+      :body => file_content('feed_new.xml'),
+      :status => 200,
+      :headers => { 'content-type' => 'application/atom+xml'}
+    }
+
+    stub_request(:get, "http://acme.org").to_return(topic_response)
+
+    t = build_topic_from_url("http://acme.org")
+    s = Subscriber.new({ :callback => "http://sub.org/callback",
+                         :verify_token => "t0ken",
+                         :id => "subscriber_id!" })
+
+    mock(Topic.profile).get_subscribers(t).returns [s]
+    mock(Topic.profile).get_last_content(t.id).returns nil
+    mock(Topic.profile).set_last_content(t.id, anything)
+    mock(t).post(s, "application/atom+xml", file_content('feed_new.xml'))
+
+    t.publish
+  end
+
   it "should POST and sign data when POSTing and subscriber has secret" do
     t = build_topic_from_url("http://acme.org")
     s = Subscriber.new({ :callback => "http://sub.org/callback", 
@@ -304,7 +354,7 @@ describe Topic do
     t.post(s, 'application/xml', "content-foo").must_equal true
   end
 
-   it "should POST and NOT sign data when POSTing and subscriber has NO secret" do
+  it "should POST and NOT sign data when POSTing and subscriber has NO secret" do
     t = build_topic_from_url("http://acme.org")
     s = Subscriber.new({ :callback => "http://sub.org/callback",
                          :verify_token => "t0ken",
@@ -321,7 +371,7 @@ describe Topic do
     t.post(s, 'application/xml', "content-foo").must_equal true
   end
 
-    it "should handle a case where callback returns non-2xx codes" do
+  it "should handle a case where callback returns non-2xx codes" do
     t = build_topic_from_url("http://acme.org")
     s = Subscriber.new({ :callback => "http://sub.org/callback",
                          :verify_token => "t0ken",

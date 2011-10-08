@@ -2,6 +2,7 @@ require 'simplecov'
 SimpleCov.start if ENV["COVERAGE"]
 
 require 'minitest/autorun'
+require 'webmock/minitest'
 require 'hubble'
 require 'hubble/default'
 require 'rr'

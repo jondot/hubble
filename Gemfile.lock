@@ -1,6 +1,8 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    addressable (2.2.6)
+    crack (0.3.1)
     httparty (0.8.0)
       multi_json
       multi_xml
@@ -31,6 +33,9 @@ GEM
     vegas (0.1.8)
       rack (>= 1.0.0)
     watchr (0.7)
+    webmock (1.7.6)
+      addressable (~> 2.2, > 2.2.5)
+      crack (>= 0.1.7)
 
 PLATFORMS
   ruby
@@ -40,6 +45,7 @@ DEPENDENCIES
   nokogiri
   rack-test
   redis
+  redis-namespace
   resque
   rr
   ruby-hmac
@@ -48,3 +54,4 @@ DEPENDENCIES
   simplecov-html
   sinatra
   watchr
+  webmock

@@ -22,6 +22,10 @@ module Hubble
       Hubble.log
     end
 
+    def log
+      self.class.log
+    end
+
     def initialize(h)
       @url = h[:url]
       @id  = h[:id]
