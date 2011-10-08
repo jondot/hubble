@@ -14,4 +14,7 @@ gem 'nokogiri'
 # redis_profile
 gem 'redis'
 gem 'resque'
-
+group :test do
+  gem 'simplecov'
+  gem 'simplecov-html'
+end

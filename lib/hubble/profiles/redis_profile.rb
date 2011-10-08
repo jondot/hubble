@@ -7,7 +7,11 @@ class RedisProfile
   attr_accessor :connection
 
   def connection
-    @connection ||= ::Redis.new
+    if(@connection.nil?)
+      @connection = ::Redis.new
+      Resque.redis = @connection
+    end
+    @connection 
   end
 
   alias_method :redis, :connection

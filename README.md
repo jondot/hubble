@@ -76,6 +76,17 @@ new content from `new_content`.
 `content_type` is there to help you toggle algorithms upon the content's type - if you decide you want to be aware of
 that (i.e. parsing `rss` vs `atom`).
 
+
+
+## Contributing
+
+For your convenience,
+
+* I've set up a watchr script for continous testing: `$ bundle exec
+  watchr specs.watchr`
+* Coverage by simplecov, run on demand: `$ rake spec COVERAGE=true`
+
+
 ## Copyright
 
 Copyright (c) 2011 [Dotan Nahum](http://gplus.to/dotan) [@jondot](http://twitter.com/jondot). See LICENSE.txt for further details.

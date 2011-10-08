@@ -32,7 +32,7 @@ module Hubble
     end
 
     def self.create(topic_url)
-      self.class.log.info("New topic: #{url}")
+      log.info("New topic: #{topic_url}")
       t = Topic.new({:url => topic_url})
       profile.save_topic(t)
     end
