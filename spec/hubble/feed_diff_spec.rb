@@ -43,6 +43,11 @@ describe SimpleFeedDiff do
     d = SimpleFeedDiff.new
     d.diff({ :meta => { :latest_id => '123134s' }}, file_content('feed_new.xml'))[1].must_equal nil
   end
+
+  it "should pass out document given all entries new" do
+    d = SimpleFeedDiff.new
+    d.diff({ :meta => { :latest_id => 'bogus-very-old-id' }}, file_content('feed_new.xml'))[1].strip.must_equal file_content('feed_new.xml').strip
+  end
 end
 
 describe DigestFeedDiff do
@@ -78,6 +83,19 @@ describe DigestFeedDiff do
 
 </feed>
 EOF
+  end
 
+  it "should keep the number of digest entries bound" do
+    buffer_size = 2
+    d = DigestFeedDiff.new buffer_size
+    res = d.diff({:meta => {:entries => ["c8648db207cdf8744dbcebbc3bf5331e", "4083b895476bd1cefc90072e414e728d"]}}, file_content('feed_new.xml'))
+    res[0].must_equal({:meta=>{:entries=>[ "4083b895476bd1cefc90072e414e728d", "b57515cc3266247a1106b76018a8495d"]}}) 
+  end
+
+  it "should return nil when no new entries appear" do
+    d = DigestFeedDiff.new
+    res = d.diff({:meta=>{:entries=>["c8648db207cdf8744dbcebbc3bf5331e", "4083b895476bd1cefc90072e414e728d", "b57515cc3266247a1106b76018a8495d"]}},
+                  file_content('feed_new.xml'))
+    res[1].must_equal nil
   end
 end
