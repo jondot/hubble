@@ -22,31 +22,22 @@ class RedisProfile
   end
 
   def get_topic_by_id(id)
-    v = redis.get(id)
-    return nil unless v
-    Marshal::load(v)
+    deserialize(id)
   end
 
   def save_topic(topic)
     tid = topic_id(topic.url)
-    topic.id = tid
-    redis.set(tid, Marshal::dump(topic))
-    topic
+    serialize(tid, topic)
   end
 
   def get_subscriber(callback)
     sid = sub_id(callback)
-    v = redis.get(sid)
-    return nil unless v
-    Marshal::load(v)
+    deserialize(sid)
   end
 
   def create_subscriber(subscriber)
     sid = sub_id(subscriber.callback)
-    subscriber.id = sid
-    redis.set(sid, Marshal::dump(subscriber))
-
-    subscriber
+    serialize(sid, subscriber)
   end
 
   def get_subscribers(topic)
@@ -62,13 +53,11 @@ class RedisProfile
   end
 
   def get_last_content(key)
-    l = redis.get("#{key}:last")
-    return nil unless l
-    Marshal::load(l)
+    deserialize("#{key}:last")
   end
 
   def set_last_content(key, content)
-    redis.set("#{key}:last", Marshal::dump(content))
+    serialize("#{key}:last", content)
   end
 
   def topic_id(topic_url)
@@ -78,7 +67,6 @@ class RedisProfile
   def sub_id(callback_url)
     "sub:#{Digest::MD5.hexdigest(callback_url)}"
   end
-
 
   #
   # command execution
@@ -95,4 +83,17 @@ class RedisProfile
     Resque.enqueue(RedisProfile::JobRunner, obj.id, method)
   end
 
+  private
+  
+  def deserialize(id)
+    v = redis.get(id)
+    return nil unless v
+    Marshal::load(v)
+  end
+
+  def serialize(id, v)
+    v.id = id
+    redis.set(id, Marshal::dump(v))
+    v
+  end
 end
